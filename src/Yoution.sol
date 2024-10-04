@@ -4,34 +4,34 @@ pragma solidity ^0.8.13;
 import "openzeppelin-contracts/contracts/token/ERC721/ERC721.sol";
 import "openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "openzeppelin-contracts/contracts/access/Ownable.sol";
+import "./reclaim/Reclaim.sol";
+import "./reclaim/Addresses.sol";
 
 contract Yoution is ERC721URIStorage, Ownable {
-    bool private _hasMinted;
+    uint256 private tokenId = 1;
+    bool public _hasMinted;
+    address public reclaimAddress;
+    string[] public providersHashes;
 
     event Minted(address indexed owner, uint256 indexed tokenId, string tokenURI);
 
-    constructor(string memory name, string memory symbol, string memory initialTokenURI) ERC721(name, symbol) Ownable(msg.sender) {
-        require(!_hasMinted, "Minting has already been done");
-        mint(initialTokenURI);
-        _hasMinted = true;
+    constructor(string[] memory _providersHashes) ERC721("Youtube Ownership Proof", "YOP") Ownable(msg.sender) {
+        providersHashes = _providersHashes;
+        reclaimAddress = Addresses.BASE_SEPOLIA_TESTNET; 
     }
 
-    function isValidProof(address account, bytes memory proof) internal view returns (bool) {
-        // Logika untuk memvalidasi proof
-        return true; // Ganti dengan logika yang sesuai
+    function isVerifyProof(Reclaim.Proof memory proof) public returns (bool){
+       bool verified = Reclaim(reclaimAddress).verifyProof(proof);
+       return verified;
     }
 
-    // tokenURI = "ipfs://QmaqffhK8kU9LHH56uvtYXbZKsdM2P3HCau4TWQ3iZnYpi"
-    function mint(string memory tokenURI) internal returns (uint256) {
+    function mint(Reclaim.Proof memory proof, string memory tokenURI) public returns (uint256) {
         require(!_hasMinted, "Minting can only be done once");
-        require(isValidProof(account, proof), "Invalid proof");
-
-        uint256 tokenId = uint256(uint160(msg.sender)); // Konversi address ke uint256
-        require(!_exists(tokenId), "Token ID already exists");
-
+        require(isVerifyProof(proof), "Invalid proof");
+        
         _mint(msg.sender, tokenId);
         _setTokenURI(tokenId, tokenURI);
 
         emit Minted(msg.sender, tokenId, tokenURI);
-    }
+    }
 }
