@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.27;
+pragma solidity ^0.8.13;
 
 import "./Claims.sol";
 import "./Random.sol";
@@ -145,7 +145,7 @@ contract Reclaim {
 	 * Call the function to assert
 	 * the validity of several claims proofs
 	 */
-	function verifyProof(Proof memory proof) public view returns (bool) {
+	function verifyProof(Proof memory proof) public view {
 		// create signed claim using claimData and signature.
 		require(proof.signedClaim.signatures.length > 0, "No signatures");
 		Claims.SignedClaim memory signed = Claims.SignedClaim(
@@ -182,7 +182,7 @@ contract Reclaim {
 			require(found, "Signature not appropriate");
 		}
 
-        return true;
+        
 
 		//@TODO: verify zkproof
 	}
