@@ -1,0 +1,506 @@
+{
+	"compiler": {
+		"version": "0.8.27+commit.40a35a09"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"inputs": [],
+				"name": "ECDSAInvalidSignature",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "length",
+						"type": "uint256"
+					}
+				],
+				"name": "ECDSAInvalidSignatureLength",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "s",
+						"type": "bytes32"
+					}
+				],
+				"name": "ECDSAInvalidSignatureS",
+				"type": "error"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint32",
+								"name": "id",
+								"type": "uint32"
+							},
+							{
+								"internalType": "uint32",
+								"name": "timestampStart",
+								"type": "uint32"
+							},
+							{
+								"internalType": "uint32",
+								"name": "timestampEnd",
+								"type": "uint32"
+							},
+							{
+								"components": [
+									{
+										"internalType": "address",
+										"name": "addr",
+										"type": "address"
+									},
+									{
+										"internalType": "string",
+										"name": "host",
+										"type": "string"
+									}
+								],
+								"internalType": "struct Reclaim.Witness[]",
+								"name": "witnesses",
+								"type": "tuple[]"
+							},
+							{
+								"internalType": "uint8",
+								"name": "minimumWitnessesForClaimCreation",
+								"type": "uint8"
+							}
+						],
+						"indexed": false,
+						"internalType": "struct Reclaim.Epoch",
+						"name": "epoch",
+						"type": "tuple"
+					}
+				],
+				"name": "EpochAdded",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "addr",
+								"type": "address"
+							},
+							{
+								"internalType": "string",
+								"name": "host",
+								"type": "string"
+							}
+						],
+						"internalType": "struct Reclaim.Witness[]",
+						"name": "witnesses",
+						"type": "tuple[]"
+					},
+					{
+						"internalType": "uint8",
+						"name": "requisiteWitnessesForClaimCreate",
+						"type": "uint8"
+					}
+				],
+				"name": "addNewEpoch",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "currentEpoch",
+				"outputs": [
+					{
+						"internalType": "uint32",
+						"name": "",
+						"type": "uint32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "epochDurationS",
+				"outputs": [
+					{
+						"internalType": "uint32",
+						"name": "",
+						"type": "uint32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "epochs",
+				"outputs": [
+					{
+						"internalType": "uint32",
+						"name": "id",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "timestampStart",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "timestampEnd",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "minimumWitnessesForClaimCreation",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint32",
+						"name": "epoch",
+						"type": "uint32"
+					}
+				],
+				"name": "fetchEpoch",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint32",
+								"name": "id",
+								"type": "uint32"
+							},
+							{
+								"internalType": "uint32",
+								"name": "timestampStart",
+								"type": "uint32"
+							},
+							{
+								"internalType": "uint32",
+								"name": "timestampEnd",
+								"type": "uint32"
+							},
+							{
+								"components": [
+									{
+										"internalType": "address",
+										"name": "addr",
+										"type": "address"
+									},
+									{
+										"internalType": "string",
+										"name": "host",
+										"type": "string"
+									}
+								],
+								"internalType": "struct Reclaim.Witness[]",
+								"name": "witnesses",
+								"type": "tuple[]"
+							},
+							{
+								"internalType": "uint8",
+								"name": "minimumWitnessesForClaimCreation",
+								"type": "uint8"
+							}
+						],
+						"internalType": "struct Reclaim.Epoch",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint32",
+						"name": "epoch",
+						"type": "uint32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "identifier",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "timestampS",
+						"type": "uint32"
+					}
+				],
+				"name": "fetchWitnessesForClaim",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "addr",
+								"type": "address"
+							},
+							{
+								"internalType": "string",
+								"name": "host",
+								"type": "string"
+							}
+						],
+						"internalType": "struct Reclaim.Witness[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "owner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"components": [
+							{
+								"components": [
+									{
+										"internalType": "string",
+										"name": "provider",
+										"type": "string"
+									},
+									{
+										"internalType": "string",
+										"name": "parameters",
+										"type": "string"
+									},
+									{
+										"internalType": "string",
+										"name": "context",
+										"type": "string"
+									}
+								],
+								"internalType": "struct Claims.ClaimInfo",
+								"name": "claimInfo",
+								"type": "tuple"
+							},
+							{
+								"components": [
+									{
+										"components": [
+											{
+												"internalType": "bytes32",
+												"name": "identifier",
+												"type": "bytes32"
+											},
+											{
+												"internalType": "address",
+												"name": "owner",
+												"type": "address"
+											},
+											{
+												"internalType": "uint32",
+												"name": "timestampS",
+												"type": "uint32"
+											},
+											{
+												"internalType": "uint32",
+												"name": "epoch",
+												"type": "uint32"
+											}
+										],
+										"internalType": "struct Claims.CompleteClaimData",
+										"name": "claim",
+										"type": "tuple"
+									},
+									{
+										"internalType": "bytes[]",
+										"name": "signatures",
+										"type": "bytes[]"
+									}
+								],
+								"internalType": "struct Claims.SignedClaim",
+								"name": "signedClaim",
+								"type": "tuple"
+							}
+						],
+						"internalType": "struct Reclaim.Proof",
+						"name": "proof",
+						"type": "tuple"
+					}
+				],
+				"name": "verifyProof",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"errors": {
+				"ECDSAInvalidSignature()": [
+					{
+						"details": "The signature derives the `address(0)`."
+					}
+				],
+				"ECDSAInvalidSignatureLength(uint256)": [
+					{
+						"details": "The signature has an invalid length."
+					}
+				],
+				"ECDSAInvalidSignatureS(bytes32)": [
+					{
+						"details": "The signature has an S value that is in the upper half order."
+					}
+				]
+			},
+			"kind": "dev",
+			"methods": {
+				"addNewEpoch((address,string)[],uint8)": {
+					"details": "Add a new epoch"
+				},
+				"constructor": {
+					"details": "This acts as a constructor for the upgradeable proxy contract"
+				},
+				"fetchEpoch(uint32)": {
+					"params": {
+						"epoch": "the epoch number to fetch; pass 0 to fetch the current epoch"
+					}
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {
+				"constructor": {
+					"notice": "Calls initialize on the base contracts"
+				},
+				"currentEpoch()": {
+					"notice": "current epoch. starts at 1, so that the first epoch is 1 "
+				},
+				"epochDurationS()": {
+					"notice": "duration of each epoch. is not a hard duration, but useful for caching purposes "
+				},
+				"epochs(uint256)": {
+					"notice": "list of all epochs "
+				},
+				"fetchEpoch(uint32)": {
+					"notice": "Fetch an epoch"
+				},
+				"fetchWitnessesForClaim(uint32,bytes32,uint32)": {
+					"notice": "Get the witnesses that'll sign the claim"
+				},
+				"verifyProof(((string,string,string),((bytes32,address,uint32,uint32),bytes[])))": {
+					"notice": "Call the function to assert the validity of several claims proofs"
+				}
+			},
+			"notice": "Reclaim Beacon contract",
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"src/reclaim/Reclaim.sol": "Reclaim"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"@openzeppelin/contracts/utils/cryptography/ECDSA.sol": {
+			"keccak256": "0xeed0a08b0b091f528356cbc7245891a4c748682d4f6a18055e8e6ca77d12a6cf",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://ba80ba06c8e6be852847e4c5f4492cef801feb6558ae09ed705ff2e04ea8b13c",
+				"dweb:/ipfs/QmXRJDv3xHLVQCVXg1ZvR35QS9sij5y9NDWYzMfUfAdTHF"
+			]
+		},
+		"src/reclaim/BytesUtils.sol": {
+			"keccak256": "0x1585d90a138e181c3e75fc5c62f4b3c75b971b5de216acd6d428cd5781376481",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://87a7a77daeeec8d9d75429fa72112011a585f93a5d3ad2f9d531219abbace179",
+				"dweb:/ipfs/Qmdg7yrHLL5iiAmRNXAKVN6ro4XJbSRYYDYXnXizPYB2M1"
+			]
+		},
+		"src/reclaim/Claims.sol": {
+			"keccak256": "0xa7c0f7a4bac9ab513d7a0e0d272d806850b617541f1c6b5021ebd87c9429fe93",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://6990eada64dcd9b108238ed101ca690c02b3a9db5a92baf0a53479801061ed80",
+				"dweb:/ipfs/QmY2ms2gVdURT3v6Wpz7YMP5XnZRSk5LKnF22BZzMipxrc"
+			]
+		},
+		"src/reclaim/Random.sol": {
+			"keccak256": "0x2c69321e0c214449c5cedc179a71596440fe93bf845d3a2884035d7c0a575223",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://e07bd60fc3305e5560a78d215f00e9ca36dfd2f63738cb206eff63bab1772116",
+				"dweb:/ipfs/QmQFKtEDpPnYCWDmfMCCpMtM6pVt2qFRDucJZnNgHcrERr"
+			]
+		},
+		"src/reclaim/Reclaim.sol": {
+			"keccak256": "0xcf1ea08af2eaa2e2dcfee9a3d51c2f1bdce8438c237e5fa956b15027d858b5e6",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://ea35955bb5fe587818bec9b12f8b63e3b44fc1749ba750972109ff64fcfc7ae4",
+				"dweb:/ipfs/QmSxETT5qNrWeicqLaK372K7ti5o9kobDvhv9N3upKzAev"
+			]
+		},
+		"src/reclaim/StringUtils.sol": {
+			"keccak256": "0xe94401450f0584618947a04615623373af410d0d4a5cbedd4ffc635d49c0e68d",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://86648650213e141799f2f366f9ef164f8c09babfdff1f5ac0377687a56c992ed",
+				"dweb:/ipfs/QmbJu4Y5xxLwMrBSPfhhyX1uSfM7A9NmEaE821npDoNWE6"
+			]
+		}
+	},
+	"version": 1
+}

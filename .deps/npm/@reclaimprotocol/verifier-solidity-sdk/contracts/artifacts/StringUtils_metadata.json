@@ -1,0 +1,46 @@
+{
+	"compiler": {
+		"version": "0.8.27+commit.40a35a09"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"notice": "Utilities for string manipulation & conversion",
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			".deps/npm/@reclaimprotocol/verifier-solidity-sdk/contracts/StringUtils.sol": "StringUtils"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		".deps/npm/@reclaimprotocol/verifier-solidity-sdk/contracts/StringUtils.sol": {
+			"keccak256": "0x20c5425abf51ec5e394f50f4d42e4a1dbacdf90d6a97efa5ff4adb27c17e98df",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://43a4341547d4b855200da042c45290677fd00bb4762eced36cdc9f5a4c171ea8",
+				"dweb:/ipfs/QmRLagkok8vJYm7MjfEbG9qu2bMbNzrJmB9pAtT2tUhGqC"
+			]
+		}
+	},
+	"version": 1
+}

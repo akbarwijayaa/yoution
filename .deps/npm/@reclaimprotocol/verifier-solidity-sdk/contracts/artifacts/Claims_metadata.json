@@ -1,0 +1,91 @@
+{
+	"compiler": {
+		"version": "0.8.27+commit.40a35a09"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "data",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "target",
+						"type": "string"
+					}
+				],
+				"name": "extractFieldFromContext",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {
+				"extractFieldFromContext(string,string)": {
+					"details": "performs string matching to find fields in context"
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"notice": "Library to assist with requesting, serialising & verifying credentials",
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			".deps/npm/@reclaimprotocol/verifier-solidity-sdk/contracts/Claims.sol": "Claims"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		".deps/npm/@reclaimprotocol/verifier-solidity-sdk/contracts/Claims.sol": {
+			"keccak256": "0x4da5fae245d2cd50ef4ca6f9725c5c060d6883009c5549ff3cef01058657f145",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://d5a4663e75e283dd16f2f7d81d843bb2f2f249082f3c95d6aba41481856f82fd",
+				"dweb:/ipfs/QmS1V2fbgte6UXSDCBXqSC81ay1CbwEfRb1NSCLjyEJn4w"
+			]
+		},
+		".deps/npm/@reclaimprotocol/verifier-solidity-sdk/contracts/StringUtils.sol": {
+			"keccak256": "0x20c5425abf51ec5e394f50f4d42e4a1dbacdf90d6a97efa5ff4adb27c17e98df",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://43a4341547d4b855200da042c45290677fd00bb4762eced36cdc9f5a4c171ea8",
+				"dweb:/ipfs/QmRLagkok8vJYm7MjfEbG9qu2bMbNzrJmB9pAtT2tUhGqC"
+			]
+		},
+		"@openzeppelin/contracts/utils/cryptography/ECDSA.sol": {
+			"keccak256": "0xeed0a08b0b091f528356cbc7245891a4c748682d4f6a18055e8e6ca77d12a6cf",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://ba80ba06c8e6be852847e4c5f4492cef801feb6558ae09ed705ff2e04ea8b13c",
+				"dweb:/ipfs/QmXRJDv3xHLVQCVXg1ZvR35QS9sij5y9NDWYzMfUfAdTHF"
+			]
+		}
+	},
+	"version": 1
+}
