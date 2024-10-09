@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "openzeppelin-contracts/contracts/token/ERC721/ERC721.sol";
+import "openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "openzeppelin-contracts/contracts/access/Ownable.sol";
 import "./reclaim/Reclaim.sol";
 import "./reclaim/Addresses.sol";
 
@@ -24,10 +24,10 @@ contract Yoution is ERC721URIStorage, Ownable {
         // Reclaim(reclaimAddress).verifyProof(proof);
 
         require(proof.signedClaim.signatures.length > 0, "No valid signature!");
+        require(bytes(proof.claimInfo.context).length > 0, "Context cannot empty!");
         bytes32 hashed = Claims.hashClaimInfo(proof.claimInfo);
 		require(proof.signedClaim.claim.identifier == hashed);
         require(proof.signedClaim.claim.owner == ownerContract, "Owner not trusted!");
-        require(bytes(proof.claimInfo.context).length > 0, "Context cannot empty!");
         
         bytes32 hashTokenId = keccak256(abi.encodePacked(proof.claimInfo.context));
         require(!registeredContext[hashTokenId], "Context already exist!");
