@@ -8,22 +8,23 @@ import "./reclaim/Reclaim.sol";
 import "./reclaim/Addresses.sol";
 
 contract Yoution is ERC721URIStorage, Ownable {
-    mapping(bytes32 => bool) private registeredContext;
+    uint256 public tokenId;
+    // mapping(bytes32 => bool) private registeredContext;
 
     event LogVerified(bool result);
     event Minted(address indexed owner, uint256 indexed tokenId, string tokenURI);
 
-    constructor() ERC721("Youtube Ownership Proof", "YOP") Ownable(msg.sender) {}
+    constructor() ERC721("Youtube Ownership Proof", "YOP") Ownable(address(Yoution)) {}
 
     function mintAccount(Reclaim.Proof memory proof, string memory tokenURI) public {
-        bytes32 hashTokenId = keccak256(abi.encodePacked(proof.claimInfo.context));
-        require(!registeredContext[hashTokenId], "Account already proofed before!");
+        // bytes32 hashTokenId = keccak256(abi.encodePacked(proof.claimInfo.context));
+        // require(!registeredContext[hashTokenId], "Account already proofed before!");
 
-        uint256 tokenId = uint256(hashTokenId);
+        // uint256 tokenId = uint256(hashTokenId);
         _mint(msg.sender, tokenId);
         _setTokenURI(tokenId, tokenURI);
-        registeredContext[hashTokenId] = true;
-
+        // registeredContext[hashTokenId] = true;
+        tokenId++;
         emit Minted(msg.sender, tokenId, tokenURI);
     }
 
