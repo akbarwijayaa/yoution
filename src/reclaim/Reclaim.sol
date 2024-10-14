@@ -194,62 +194,6 @@ contract Reclaim is Initializable, UUPSUpgradeable, OwnableUpgradeable {
 		return proof.claimInfo.provider;
 	}
 
-	function extractFieldFromContext(
-		string memory data,
-		string memory target
-	) public pure returns (string memory) {
-		bytes memory dataBytes = bytes(data);
-		bytes memory targetBytes = bytes(target);
-
-		require(dataBytes.length >= targetBytes.length, "target is longer than data");
-		uint start = 0;
-		bool foundStart = false;
-		// Find start of "contextMessage":"
-
-		for (uint i = 0; i <= dataBytes.length - targetBytes.length; i++) {
-			bool isMatch = true;
-
-			for (uint j = 0; j < targetBytes.length && isMatch; j++) {
-				if (dataBytes[i + j] != targetBytes[j]) {
-					isMatch = false;
-				}
-			}
-
-			if (isMatch) {
-				start = i + targetBytes.length; // Move start to the end of "contextMessage":"
-				foundStart = true;
-				break;
-			}
-		}
-
-		if (!foundStart) {
-			return ""; // Malformed or missing message
-		}
-
-		// Find the end of the message, assuming it ends with a quote not preceded by a backslash.
-		// The function does not need to handle escaped backslashes specifically because
-		// it only looks for the first unescaped quote to mark the end of the field value.
-		// Escaped quotes (preceded by a backslash) are naturally ignored in this logic.
-		uint end = start;
-		while (
-			end < dataBytes.length &&
-			!(dataBytes[end] == '"' && dataBytes[end - 1] != "\\")
-		) {
-			end++;
-		}
-
-		// if the end is not found, return an empty string because of malformed or missing message
-		if (end <= start || !(dataBytes[end] == '"' && dataBytes[end - 1] != "\\")) {
-			return ""; // Malformed or missing message
-		}
-
-		bytes memory contextMessage = new bytes(end - start);
-		for (uint i = start; i < end; i++) {
-			contextMessage[i - start] = dataBytes[i];
-		}
-		return string(contextMessage);
-	}
-
 	function getMerkelizedUserParams(
 		string memory provider,
 		string memory params
