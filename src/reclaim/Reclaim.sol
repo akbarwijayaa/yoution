@@ -1,10 +1,6 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.4;
+pragma solidity 0.8.20;
 
-import "openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol";
-import "openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol";
-import "./SemaphoreInterface.sol";
 import "./Claims.sol";
 import "./Random.sol";
 import "./StringUtils.sol";
@@ -12,13 +8,11 @@ import "./BytesUtils.sol";
 
 // import "hardhat/console.sol";
 
-error Reclaim__GroupAlreadyExists();
-error Reclaim__UserAlreadyMerkelized();
 
 /**
  * Reclaim Beacon contract
  */
-contract Reclaim is Initializable, UUPSUpgradeable, OwnableUpgradeable {
+contract Reclaim {
 	struct Witness {
 		/** ETH address of the witness */
 		address addr;
@@ -50,9 +44,6 @@ contract Reclaim is Initializable, UUPSUpgradeable, OwnableUpgradeable {
 	/** list of all epochs */
 	Epoch[] public epochs;
 
-	/** address of the semaphore contract */
-	address public semaphoreAddress;
-
 	/**
 	 * duration of each epoch.
 	 * is not a hard duration, but useful for
@@ -66,54 +57,26 @@ contract Reclaim is Initializable, UUPSUpgradeable, OwnableUpgradeable {
 	 * */
 	uint32 public currentEpoch;
 
-	/**
-	 * created groups mapping
-	 * map groupId with true if already created
-	 * */
-	mapping(uint256 => bool) createdGroups;
-
-	mapping(uint256 => mapping(string => bool)) isUserMerkelized;
 
 	event EpochAdded(Epoch epoch);
 
-	event GroupCreated(uint256 indexed groupId, string indexed provider);
-
-	event DappCreated(bytes32 indexed dappId);
-
-	bool internal locked;
-
-	mapping(bytes32 => bool) merkelizedUserParams;
-
-	mapping(bytes32 => uint256) dappIdToExternalNullifier;
-
-	// Modifiers
-	modifier nonReentrant() {
-		require(!locked, "No re-entrancy");
-		locked = true;
-		_;
-		locked = false;
-	}
+	address public owner;
 
 	/**
 	 * @notice Calls initialize on the base contracts
 	 *
 	 * @dev This acts as a constructor for the upgradeable proxy contract
 	 */
-	function initialize(address _semaphoreAddress) external initializer {
-		__Ownable_init(msg.sender);
+	constructor() {
 		epochDurationS = 1 days;
 		currentEpoch = 0;
-		semaphoreAddress = _semaphoreAddress;
+		owner = msg.sender;
 	}
 
-	/**
-	 * @notice Override of UUPSUpgradeable virtual function
-	 *
-	 * @dev Function that should revert when `msg.sender` is not authorized to upgrade the contract. Called by
-	 * {upgradeTo} and {upgradeToAndCall}.
-	 */
-	function _authorizeUpgrade(address) internal view override onlyOwner {}
-
+	modifier onlyOwner () {
+		require(owner == msg.sender, "Only Owner");
+		_;
+	}
 	// epoch functions ---
 
 	/**
@@ -170,36 +133,12 @@ contract Reclaim is Initializable, UUPSUpgradeable, OwnableUpgradeable {
 			// and reduce the number of witnesses left to pick from
 			// since solidity doesn't support "pop()" in memory arrays
 			// we swap the last element with the element we want to remove
-			witnessesLeftList[witnessIndex] = witnessesLeftList[witnessesLeft - 1];
+			witnessesLeftList[witnessIndex] = epochData.witnesses[witnessesLeft - 1];
 			byteOffset = (byteOffset + 4) % completeHash.length;
 			witnessesLeft -= 1;
 		}
 
 		return selectedWitnesses;
-	}
-
-	function createDapp(uint256 id) external {
-		bytes32 dappId = keccak256(abi.encodePacked(msg.sender, id));
-		require(dappIdToExternalNullifier[dappId] != id, "Dapp Already Exists");
-		dappIdToExternalNullifier[dappId] = id;
-		emit DappCreated(dappId);
-	}
-
-	/**
-	 * Get the provider name from the proof
-	 */
-	function getProviderFromProof(
-		Proof memory proof
-	) external pure returns (string memory) {
-		return proof.claimInfo.provider;
-	}
-
-	function getMerkelizedUserParams(
-		string memory provider,
-		string memory params
-	) external view returns (bool) {
-		bytes32 userParamsHash = calculateUserParamsHash(provider, params);
-		return merkelizedUserParams[userParamsHash];
 	}
 
 	/**
@@ -231,17 +170,6 @@ contract Reclaim is Initializable, UUPSUpgradeable, OwnableUpgradeable {
 			"Number of signatures not equal to number of witnesses"
 		);
 
-		// Check for duplicate witness signatures
-		for (uint256 i = 0; i < signedWitnesses.length; i++) {
-			for (uint256 j = 0; j < signedWitnesses.length; j++) {
-				if (i == j) continue;
-				require(
-					signedWitnesses[i] != signedWitnesses[j],
-					"Duplicated Signatures Found"
-				);
-			}
-		}
-
 		// Update awaited: more checks on whose signatures can be considered.
 		for (uint256 i = 0; i < signed.signatures.length; i++) {
 			bool found = false;
@@ -253,73 +181,8 @@ contract Reclaim is Initializable, UUPSUpgradeable, OwnableUpgradeable {
 			}
 			require(found, "Signature not appropriate");
 		}
-	}
 
-	function createGroup(
-		string memory provider,
-		uint256 merkleTreeDepth // address admin
-	) public {
-		uint256 groupId = calculateGroupIdFromProvider(provider);
-		if (createdGroups[groupId] == true) {
-			revert Reclaim__GroupAlreadyExists();
-		}
-		SemaphoreInterface(semaphoreAddress).createGroup(
-			groupId,
-			merkleTreeDepth,
-			address(this)
-		);
-		createdGroups[groupId] = true;
-		emit GroupCreated(groupId, provider);
-	}
-
-	function merkelizeUser(
-		Proof memory proof,
-		uint256 _identityCommitment
-	) external nonReentrant {
-		uint256 groupId = calculateGroupIdFromProvider(proof.claimInfo.provider);
-		bytes32 userParamsHash = calculateUserParamsHash(
-			proof.claimInfo.provider,
-			proof.claimInfo.parameters
-		);
-		if (merkelizedUserParams[userParamsHash] == true) {
-			revert Reclaim__UserAlreadyMerkelized();
-		}
-		verifyProof(proof);
-		if (createdGroups[groupId] != true) {
-			createGroup(proof.claimInfo.provider, 20);
-		}
-		SemaphoreInterface(semaphoreAddress).addMember(groupId, _identityCommitment);
-		merkelizedUserParams[userParamsHash] = true;
-	}
-
-	function verifyMerkelIdentity(
-		string memory provider,
-		uint256 _merkleTreeRoot,
-		uint256 _signal,
-		uint256 _nullifierHash,
-		uint256 _externalNullifier,
-		bytes32 dappId,
-		uint256[8] calldata _proof
-	) external returns (bool) {
-		require(
-			dappIdToExternalNullifier[dappId] == _externalNullifier,
-			"Dapp Not Created"
-		);
-		uint256 groupId = calculateGroupIdFromProvider(provider);
-		try
-			SemaphoreInterface(semaphoreAddress).verifyProof(
-				groupId,
-				_merkleTreeRoot,
-				_signal,
-				_nullifierHash,
-				_externalNullifier,
-				_proof
-			)
-		{
-			return true;
-		} catch {
-			return false;
-		}
+		//@TODO: verify zkproof
 	}
 
 	// admin functions ---
@@ -354,27 +217,11 @@ contract Reclaim is Initializable, UUPSUpgradeable, OwnableUpgradeable {
 
 	// internal code -----
 
-	/**
-	 * @dev Get/Calculate the groupId for a specific provider
-	 */
-	function calculateGroupIdFromProvider(
-		string memory provider
-	) internal pure returns (uint256) {
-		bytes memory providerBytes = bytes(provider);
-		bytes memory hashedProvider = abi.encodePacked(keccak256(providerBytes));
-		uint256 groupId = BytesUtils.bytesToUInt(
-			hashedProvider,
-			hashedProvider.length - 4
-		);
-		return groupId;
-	}
+	function uintDifference(uint256 a, uint256 b) internal pure returns (uint256) {
+		if (a > b) {
+			return a - b;
+		}
 
-	function calculateUserParamsHash(
-		string memory provider,
-		string memory params
-	) internal pure returns (bytes32) {
-		string memory delimiter = ":";
-		bytes32 userParamsHash = keccak256(abi.encodePacked(provider, delimiter, params));
-		return userParamsHash;
+		return b - a;
 	}
 }
