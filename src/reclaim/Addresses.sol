@@ -5,9 +5,9 @@ pragma solidity 0.8.20;
  * Reclaim's addresses
  */
 library Addresses {
-    address public constant BNB_MAINNET =0x1bbb0896aC6F4E32a89157C73Fb830325a441cb9;
-    address public constant POLYGON_MAINNET =0xd6534f52CEB3d0139b915bc0C3278a94687fA5C7;
-    address public constant LINEA_TESTNET =0xf223E215B2c9A2E5FE1B2971d5694684b2E734C1;
+    address public constant BNB_MAINNET = 0x1bbb0896aC6F4E32a89157C73Fb830325a441cb9;
+    address public constant POLYGON_MAINNET = 0xd6534f52CEB3d0139b915bc0C3278a94687fA5C7;
+    address public constant LINEA_TESTNET = 0xf223E215B2c9A2E5FE1B2971d5694684b2E734C1;
     address public constant ETHEREUM = 0xA2bFF333d2E5468cF4dc6194EB4B5DdeFA2625C0;
     address public constant AVALANCHE = 0xe4377A529A47Ba2fBE34EfA6B0a4A8cD12eb93BC;
     address public constant ARBITRUM = 0x9F0472FD02Ca1BC2d6C3A1702803Ba822C7C7E91;
